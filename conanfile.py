@@ -54,7 +54,7 @@ class CurlConan(ConanFile):
                                           '--without-libidn',
                                           '--without-librtmp',
                                           '--without-libssh2',
-                                          '--prefix=../%s' % self.install_dir])
+                                          '--prefix=%s/../%s' % (os.getcwd(), self.install_dir)])
                 autotools.make(args=['--quiet'])
                 autotools.make(target='install', args=['--quiet'])
 
