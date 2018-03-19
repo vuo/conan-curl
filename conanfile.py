@@ -17,6 +17,7 @@ class CurlConan(ConanFile):
     description = 'A library for transferring data with URLs'
     source_dir = 'curl-%s' % source_version
     build_dir = '_build'
+    install_dir = '_install'
 
     def source(self):
         tools.get('http://curl.haxx.se/download/curl-%s.tar.gz' % self.source_version,
@@ -53,13 +54,13 @@ class CurlConan(ConanFile):
                                           '--without-libidn',
                                           '--without-librtmp',
                                           '--without-libssh2',
-                                          '--prefix=%s' % os.getcwd()])
+                                          '--prefix=../%s' % self.install_dir])
                 autotools.make(args=['--quiet'])
                 autotools.make(target='install', args=['--quiet'])
 
     def package(self):
-        self.copy('*.h', src='%s/include' % self.build_dir, dst='include')
-        self.copy('libcurl.dylib', src='%s/lib' % self.build_dir, dst='lib')
+        self.copy('*.h', src='%s/include' % self.install_dir, dst='include')
+        self.copy('libcurl.dylib', src='%s/lib' % self.install_dir, dst='lib')
 
     def package_info(self):
         self.cpp_info.libs = ['curl']
