@@ -6,7 +6,7 @@ class CurlConan(ConanFile):
     name = 'curl'
 
     source_version = '7.30.0'
-    package_version = '1'
+    package_version = '2'
     version = '%s-%s' % (source_version, package_version)
 
     requires = 'llvm/3.3-1@vuo/stable', \
@@ -33,6 +33,11 @@ class CurlConan(ConanFile):
             autotools.libs = []
 
             autotools.cxx_flags.append('-Oz')
+
+            # Hide all non-cURL symbols, for compliance with the
+            # Export Administration Regulations of the U.S. Bureau of Industry and Security
+            # (since we link to OpenSSL).
+            autotools.link_flags.append("-Wl,-exported_symbol,'_curl*'")
 
             if platform.system() == 'Darwin':
                 autotools.cxx_flags.append('-mmacosx-version-min=10.10')
