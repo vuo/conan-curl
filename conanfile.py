@@ -32,7 +32,7 @@ class CurlConan(ConanFile):
             # but this package doesn't need to link with them.
             autotools.libs = []
 
-            autotools.cxx_flags.append('-Oz')
+            autotools.flags.append('-Oz')
 
             # Hide all non-cURL symbols, for compliance with the
             # Export Administration Regulations of the U.S. Bureau of Industry and Security
@@ -40,7 +40,7 @@ class CurlConan(ConanFile):
             autotools.link_flags.append("-Wl,-exported_symbol,'_curl*'")
 
             if platform.system() == 'Darwin':
-                autotools.cxx_flags.append('-mmacosx-version-min=10.10')
+                autotools.flags.append('-mmacosx-version-min=10.10')
                 autotools.link_flags.append('-Wl,-headerpad_max_install_names')
                 autotools.link_flags.append('-Wl,-install_name,@rpath/libcurl.dylib')
 
