@@ -29,6 +29,8 @@ class CurlConan(ConanFile):
         tools.get('http://curl.haxx.se/download/curl-%s.tar.gz' % self.source_version,
                   sha256='361669c3c4b9baa5343e7e83bce695e60683d0b97b402e664bbaed42c15e95a8')
 
+        self.run('mv %s/COPYING %s/%s.txt' % (self.source_dir, self.source_dir, self.name))
+
     def build(self):
         tools.mkdir(self.build_dir)
         with tools.chdir(self.build_dir):
@@ -76,6 +78,8 @@ class CurlConan(ConanFile):
     def package(self):
         self.copy('*.h', src='%s/include' % self.install_dir, dst='include')
         self.copy('libcurl.dylib', src='%s/lib' % self.install_dir, dst='lib')
+
+        self.copy('%s.txt' % self.name, src=self.source_dir, dst='license')
 
     def package_info(self):
         self.cpp_info.libs = ['curl']
