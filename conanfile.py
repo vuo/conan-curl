@@ -19,6 +19,12 @@ class CurlConan(ConanFile):
     build_dir = '_build'
     install_dir = '_install'
 
+    def requirements(self):
+        if platform.system() == 'Linux':
+            self.requires('patchelf/0.9@vuo/stable')
+        elif platform.system() != 'Darwin':
+            raise Exception('Unknown platform "%s"' % platform.system())
+
     def source(self):
         tools.get('http://curl.haxx.se/download/curl-%s.tar.gz' % self.source_version,
                   sha256='361669c3c4b9baa5343e7e83bce695e60683d0b97b402e664bbaed42c15e95a8')
@@ -62,6 +68,10 @@ class CurlConan(ConanFile):
                                           '--prefix=%s/../%s' % (os.getcwd(), self.install_dir)])
                 autotools.make(args=['--quiet'])
                 autotools.make(target='install', args=['--quiet'])
+
+            if platform.system() == 'Linux':
+                patchelf = self.deps_cpp_info['patchelf'].rootpath + '/bin/patchelf'
+                self.run('%s --set-soname libcurl.so lib/libcurl.so' % patchelf)
 
     def package(self):
         self.copy('*.h', src='%s/include' % self.install_dir, dst='include')
