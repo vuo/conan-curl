@@ -45,12 +45,17 @@ class CurlConan(ConanFile):
             # Hide all non-cURL symbols, for compliance with the
             # Export Administration Regulations of the U.S. Bureau of Industry and Security
             # (since we link to OpenSSL).
-            autotools.link_flags.append("-Wl,-exported_symbol,'_curl*'")
+            if platform.system() == 'Darwin':
+                autotools.link_flags.append("-Wl,-exported_symbol,'_curl*'")
+            elif platform.system() == 'Linux':
+                autotools.link_flags.append('-Wl,--exclude-libs=ALL')
 
             if platform.system() == 'Darwin':
                 autotools.flags.append('-mmacosx-version-min=10.10')
                 autotools.link_flags.append('-Wl,-headerpad_max_install_names')
                 autotools.link_flags.append('-Wl,-install_name,@rpath/libcurl.dylib')
+            elif platform.system() == 'Linux':
+                autotools.libs.append('dl')
 
             env_vars = {
                 'CC' : self.deps_cpp_info['llvm'].rootpath + '/bin/clang',
@@ -63,7 +68,7 @@ class CurlConan(ConanFile):
                                     args=['--quiet',
                                           '--disable-ldap',
                                           '--enable-shared',
-                                          '--with-ssl',
+                                          '--with-ssl=' + self.deps_cpp_info['openssl'].rootpath,
                                           '--without-libidn',
                                           '--without-librtmp',
                                           '--without-libssh2',
@@ -71,13 +76,19 @@ class CurlConan(ConanFile):
                 autotools.make(args=['--quiet'])
                 autotools.make(target='install', args=['--quiet'])
 
+        with tools.chdir(self.install_dir):
             if platform.system() == 'Linux':
                 patchelf = self.deps_cpp_info['patchelf'].rootpath + '/bin/patchelf'
                 self.run('%s --set-soname libcurl.so lib/libcurl.so' % patchelf)
 
     def package(self):
+        if platform.system() == 'Darwin':
+            libext = 'dylib'
+        elif platform.system() == 'Linux':
+            libext = 'so'
+
         self.copy('*.h', src='%s/include' % self.install_dir, dst='include')
-        self.copy('libcurl.dylib', src='%s/lib' % self.install_dir, dst='lib')
+        self.copy('libcurl.%s' % libext, src='%s/lib' % self.install_dir, dst='lib')
 
         self.copy('%s.txt' % self.name, src=self.source_dir, dst='license')
 
