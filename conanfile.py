@@ -6,7 +6,7 @@ class CurlConan(ConanFile):
     name = 'curl'
 
     source_version = '7.30.0'
-    package_version = '2'
+    package_version = '3'
     version = '%s-%s' % (source_version, package_version)
 
     requires = 'llvm/3.3-1@vuo/stable', \
