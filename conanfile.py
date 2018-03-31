@@ -10,7 +10,7 @@ class CurlConan(ConanFile):
     version = '%s-%s' % (source_version, package_version)
 
     requires = 'llvm/3.3-2@vuo/stable', \
-        'openssl/1.0.2n-1@vuo/stable'
+        'openssl/1.0.2n-2@vuo/stable'
     settings = 'os', 'compiler', 'build_type', 'arch'
     url = 'https://curl.haxx.se/'
     license = 'https://curl.haxx.se/docs/copyright.html'
