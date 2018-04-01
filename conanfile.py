@@ -21,7 +21,7 @@ class CurlConan(ConanFile):
 
     def requirements(self):
         if platform.system() == 'Linux':
-            self.requires('patchelf/0.9@vuo/stable')
+            self.requires('patchelf/0.10pre-1@vuo/stable')
         elif platform.system() != 'Darwin':
             raise Exception('Unknown platform "%s"' % platform.system())
 
