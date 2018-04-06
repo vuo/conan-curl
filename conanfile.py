@@ -9,8 +9,8 @@ class CurlConan(ConanFile):
     package_version = '3'
     version = '%s-%s' % (source_version, package_version)
 
-    requires = 'llvm/3.3-2@vuo/stable', \
-        'openssl/1.0.2n-2@vuo/stable'
+    build_requires = 'llvm/3.3-5@vuo/stable'
+    requires = 'openssl/1.0.2n-2@vuo/stable'
     settings = 'os', 'compiler', 'build_type', 'arch'
     url = 'https://curl.haxx.se/'
     license = 'https://curl.haxx.se/docs/copyright.html'
@@ -38,7 +38,7 @@ class CurlConan(ConanFile):
 
             # The LLVM/Clang libs get automatically added by the `requires` line,
             # but this package doesn't need to link with them.
-            autotools.libs = []
+            autotools.libs = ['c++abi']
 
             autotools.flags.append('-Oz')
 
