@@ -5,12 +5,12 @@ import platform
 class CurlConan(ConanFile):
     name = 'curl'
 
-    source_version = '7.59.0'
+    source_version = '7.64.1'
     package_version = '1'
     version = '%s-%s' % (source_version, package_version)
 
     build_requires = 'llvm/3.3-5@vuo/stable'
-    requires = 'openssl/1.0.2o-1@vuo/stable'
+    requires = 'openssl/1.1.1b-1@vuo/stable'
     settings = 'os', 'compiler', 'build_type', 'arch'
     url = 'https://curl.haxx.se/'
     license = 'https://curl.haxx.se/docs/copyright.html'
@@ -27,7 +27,7 @@ class CurlConan(ConanFile):
 
     def source(self):
         tools.get('http://curl.haxx.se/download/curl-%s.tar.gz' % self.source_version,
-                  sha256='099d9c32dc7b8958ca592597c9fabccdf4c08cfb7c114ff1afbbc4c6f13c9e9e')
+                  sha256='432d3f466644b9416bc5b649d344116a753aeaa520c8beaf024a90cba9d3d35d')
 
         self.run('mv %s/COPYING %s/%s.txt' % (self.source_dir, self.source_dir, self.name))
 
@@ -51,6 +51,7 @@ class CurlConan(ConanFile):
                 autotools.link_flags.append('-Wl,--exclude-libs=ALL')
 
             if platform.system() == 'Darwin':
+                autotools.flags.append('-isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk')
                 autotools.flags.append('-mmacosx-version-min=10.10')
                 autotools.link_flags.append('-Wl,-headerpad_max_install_names')
                 autotools.link_flags.append('-Wl,-install_name,@rpath/libcurl.dylib')
