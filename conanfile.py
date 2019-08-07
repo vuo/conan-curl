@@ -5,12 +5,12 @@ import platform
 class CurlConan(ConanFile):
     name = 'curl'
 
-    source_version = '7.64.1'
-    package_version = '1'
+    source_version = '7.65.3'
+    package_version = '0'
     version = '%s-%s' % (source_version, package_version)
 
     build_requires = 'llvm/3.3-5@vuo/stable'
-    requires = 'openssl/1.1.1b-1@vuo/stable'
+    requires = 'openssl/1.1.1c-0@vuo/stable'
     settings = 'os', 'compiler', 'build_type', 'arch'
     url = 'https://curl.haxx.se/'
     license = 'https://curl.haxx.se/docs/copyright.html'
@@ -27,7 +27,7 @@ class CurlConan(ConanFile):
 
     def source(self):
         tools.get('http://curl.haxx.se/download/curl-%s.tar.gz' % self.source_version,
-                  sha256='432d3f466644b9416bc5b649d344116a753aeaa520c8beaf024a90cba9d3d35d')
+                  sha256='4376ac72b95572fb6c4fbffefb97c7ea0dd083e1974c0e44cd7e49396f454839')
 
         self.run('mv %s/COPYING %s/%s.txt' % (self.source_dir, self.source_dir, self.name))
 
