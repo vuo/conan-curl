@@ -1,1 +1,1 @@
-[![Build Status](https://travis-ci.org/vuo/conan-curl.svg?branch=master)](https://travis-ci.org/vuo/conan-curl)
+[ ![Download](https://api.bintray.com/packages/vuo/conan/curl%3Avuo/images/download.svg) ](https://bintray.com/vuo/conan/curl%3Avuo/_latestVersion)
