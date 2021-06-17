@@ -6,12 +6,12 @@ class CurlConan(ConanFile):
     name = 'curl'
 
     source_version = '7.73.0'
-    package_version = '0'
+    package_version = '1'
     version = '%s-%s' % (source_version, package_version)
 
     build_requires = (
-        'llvm/5.0.2-1@vuo/stable',
-        'macos-sdk/11.0-0@vuo/stable',
+        'llvm/5.0.2-1@vuo+conan+llvm/stable',
+        'macos-sdk/11.0-0@vuo+conan+macos-sdk/stable',
     )
     requires = 'openssl/1.1.1h-0@vuo/stable'
     settings = 'os', 'compiler', 'build_type', 'arch'
@@ -62,6 +62,10 @@ class CurlConan(ConanFile):
         cmake.definitions['CURL_DISABLE_TFTP'] = 'ON'
         cmake.definitions['CMAKE_USE_LIBSSH2'] = 'OFF'
         cmake.definitions['OPENSSL_ROOT_DIR'] = self.deps_cpp_info['openssl'].rootpath
+
+        # Don't use `clock_gettime` which doesn't exist on OS X 10.11.
+        # https://b33p.net/kosada/vuo/vuo/-/issues/18490
+        cmake.definitions['HAVE_CLOCK_GETTIME_MONOTONIC'] = 'OFF'
 
         # Hide all non-cURL symbols, for compliance with the
         # Export Administration Regulations of the U.S. Bureau of Industry and Security

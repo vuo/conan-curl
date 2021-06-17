@@ -4,8 +4,8 @@ import platform
 class CurlTestConan(ConanFile):
     generators = 'cmake'
     requires = (
-        'llvm/5.0.2-1@vuo/stable',
-        'macos-sdk/11.0-0@vuo/stable',
+        'llvm/5.0.2-1@vuo+conan+llvm/stable',
+        'macos-sdk/11.0-0@vuo+conan+macos-sdk/stable',
     )
 
     def build(self):
@@ -19,6 +19,10 @@ class CurlTestConan(ConanFile):
 
     def test(self):
         self.run('./bin/test_package')
+
+        # Ensure we don't use `clock_gettime` which doesn't exist on OS X 10.11.
+        # https://b33p.net/kosada/vuo/vuo/-/issues/18490
+        self.run('! ( nm lib/libcurl.dylib | grep _clock_gettime )')
 
         # Ensure we only link to system libraries and our own libraries.
         if platform.system() == 'Darwin':
